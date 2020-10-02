@@ -20,9 +20,17 @@ class Normalized
         $this->parseLink($link);
     }
 
-    protected function valid(): bool
+    protected function parseSettings($settings)
     {
-        return is_string($this->url) && is_string($this->label);
+        if ( ! is_array($settings)) {
+            return;
+        }
+
+        foreach ($settings as $key => $setting) {
+            if (isset($this->settings[$key])) {
+                $this->settings[$key] = $setting;
+            }
+        }
     }
 
     protected function parseLink($link)
@@ -50,19 +58,6 @@ class Normalized
         }
     }
 
-    protected function parseSettings($settings)
-    {
-        if ( ! is_array($settings)) {
-            return;
-        }
-
-        foreach ($settings as $key => $setting) {
-            if (isset($this->settings[$key])) {
-                $this->settings[$key] = $setting;
-            }
-        }
-    }
-
     protected function probablyExternal($url)
     {
         // If link starts with a slash, it's almost certainly local
@@ -80,6 +75,11 @@ class Normalized
         }
 
         return null;
+    }
+
+    public function valid(): bool
+    {
+        return is_string($this->url) && is_string($this->label);
     }
 
     public function label()
