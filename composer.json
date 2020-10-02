@@ -1,0 +1,19 @@
+{
+    "name": "livy/plumbing-normalize-links",
+    "description": "Normalize the output of WordPress's native \"link\" in ACF.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ben Martinez-Bateman",
+            "email": "ben@alwaysblank.org"
+        }
+    ],
+    "require": {
+      "php": "~7.3"
+    },
+    "autoload": {
+      "psr-4": {
+          "\\Livy\\Plumbing\\NormalizeLinks\\": "src/"
+      }
+    }
+}
