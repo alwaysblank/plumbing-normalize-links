@@ -2,7 +2,7 @@
 
 namespace Livy\Plumbing\NormalizeLinks;
 
-class NormalizeLinks
+class Normalized
 {
 
     protected $url;
