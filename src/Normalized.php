@@ -14,7 +14,7 @@ class Normalized
         'external_in_new_tab' => true,
     ];
 
-    public function __construct($link, $settings)
+    public function __construct($link, $settings = [])
     {
         $this->parseSettings($settings);
         $this->parseLink($link);
