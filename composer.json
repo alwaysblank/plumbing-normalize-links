@@ -13,7 +13,7 @@
     },
     "autoload": {
       "psr-4": {
-          "\\Livy\\Plumbing\\NormalizeLinks\\": "src/"
+          "Livy\\Plumbing\\NormalizeLinks\\": "src/"
       }
     }
 }
