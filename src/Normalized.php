@@ -45,6 +45,8 @@ class Normalized
 
         if (isset($link['title']) && is_string($link['title'])) {
             $this->label = $link['title'];
+        } else {
+            $this->label = $this->settings['label'];
         }
 
         if (isset($link['target']) && '_blank' === $link['target']) {
