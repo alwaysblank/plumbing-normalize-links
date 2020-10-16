@@ -60,6 +60,26 @@ class Normalized
         }
     }
 
+    public function set($key, $value)
+    {
+        if (in_array($key, ['url', 'label', 'newTab'])) {
+            switch ($key) {
+                case 'url':
+                    $this->url = $value;
+                    $this->probablyExternal = $this->probablyExternal($this->url);
+                    if ($this->probablyExternal && true === $this->settings['external_in_new_tab']) {
+                        $this->newTab = true;
+                    }
+                    break;
+                default:
+                    $this->$key = $value;
+                    break;
+            }
+        }
+
+        return $this;
+    }
+
     protected function probablyExternal($url)
     {
         // If link starts with a slash, it's almost certainly local
