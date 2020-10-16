@@ -35,6 +35,13 @@ class Normalized
 
     protected function parseLink($link)
     {
+        // Make it easy on ourselves and allow simple links
+        if (is_string($link)) {
+            $link = [
+                'url' => $link,
+            ];
+        }
+
         if ( ! is_array($link)) {
             return;
         }
