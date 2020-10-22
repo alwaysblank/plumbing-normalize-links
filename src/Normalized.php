@@ -46,7 +46,12 @@ class Normalized
             return;
         }
 
-        if (isset($link['url']) && filter_var($link['url'], FILTER_VALIDATE_URL)) {
+        if (isset($link['url'])
+            && (
+                // If it starts w/ a slash, assume a good link (to allow for relative links)
+                strpos($link['url'],'/') === 0
+                || filter_var($link['url'], FILTER_VALIDATE_URL)
+            )) {
             $this->url = $link['url'];
         }
 
