@@ -1,0 +1,40 @@
+= Normalize Links
+
+image:https://travis-ci.org/alwaysblank/plumbing-normalize-links.svg?branch=dev["Build Status", link="https://travis-ci.org/alwaysblank/plumbing-normalize-links"]
+
+The purpose of this small package is to ingest the link arrays produced by https://www.advancedcustomfields.com/resources/link/[ACF's "link" field type], do a bit of logic on them, and provide a nice interface for interacting with that data.
+It can also accept urls as plain strings.
+
+== Usage
+
+.ACF field
+[source,php]
+----
+$Link = new Normalized(get_field('some_link'));
+
+$Link->valid(); //whether or not this is a "valid" link
+$Link->url(); // the URL of the link
+$Link->label(); // the "title" set for this link
+$Link->newTab(); // whether this link should be opened in a new tab
+$Link->probablyExternal() // if the link is (probably) external or not
+----
+
+.Simple string
+[source,php]
+----
+$Link = new Normalized('https://www.alwaysblank.org');
+----
+
+=== Settings
+
+A small number of settings are also supported, which can be passed when instantiated.
+
+[source,php]
+----
+$Link = new Normalized(get_field('some_link'), [
+    'label' => "Learn More", // Used as a fallback if there is no `title.`
+    'external_in_new_tab' => true, // Always open external links in new tab
+]);
+----
+
+`label` defaults to "Learn More" and `external_in_new_tab` defaults to `true`.
