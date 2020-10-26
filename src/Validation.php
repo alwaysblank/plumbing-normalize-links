@@ -15,8 +15,8 @@ class Validation
         // This allows for URLs that don't have a protocol or host.
         // It's not meant to be a robust definition of "what is a url"--
         // just a definition that makes sense in the context of this package.
-        return strpos($link['url'],'/') === 0
-               || filter_var($link['url'], FILTER_VALIDATE_URL);
+        return strpos($string,'/') === 0
+               || filter_var($string, FILTER_VALIDATE_URL);
     }
 
     public static function title($string): bool
