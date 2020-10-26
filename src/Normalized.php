@@ -33,6 +33,27 @@ class Normalized
         }
     }
 
+    protected function validatePart(string $part, array$source)
+    {
+        if (!isset($source[$part])) {
+            return false;
+        }
+
+        $value = $source[$part];
+
+        switch ($part) {
+            case 'url':
+                return Validation::url($value);
+            case 'title':
+                return Validation::title($value);
+            case 'target':
+                return '_blank' === $value;
+        }
+
+        // Didn't match anything, so not valid
+        return false;
+    }
+
     protected function parseLink($link)
     {
         // Make it easy on ourselves and allow simple links
@@ -46,27 +67,26 @@ class Normalized
             return;
         }
 
-        if (isset($link['url'])
-            && (
-                // If it starts w/ a slash, assume a good link (to allow for relative links)
-                strpos($link['url'],'/') === 0
-                || filter_var($link['url'], FILTER_VALIDATE_URL)
-            )) {
+        if ($this->validatePart('url', $link)) {
             $this->url = $link['url'];
         }
 
-        if (isset($link['title']) && is_string($link['title'])) {
+        if ($this->validatePart('title', $link)) {
             $this->label = $link['title'];
         } else {
             $this->label = $this->settings['label'];
         }
 
-        if (isset($link['target']) && '_blank' === $link['target']) {
+        if ($this->validatePart('target', $link)) {
             $this->newTab = true;
         }
 
-        $this->probablyExternal = $this->probablyExternal($this->url);
+        $this->evaluateExternality();
+    }
 
+    protected function evaluateExternality()
+    {
+        $this->probablyExternal = Validation::probablyExternal($this->url);
         if ($this->probablyExternal && true === $this->settings['external_in_new_tab']) {
             $this->newTab = true;
         }
@@ -78,10 +98,7 @@ class Normalized
             switch ($key) {
                 case 'url':
                     $this->url = $value;
-                    $this->probablyExternal = $this->probablyExternal($this->url);
-                    if ($this->probablyExternal && true === $this->settings['external_in_new_tab']) {
-                        $this->newTab = true;
-                    }
+                    $this->evaluateExternality();
                     break;
                 default:
                     $this->$key = $value;
@@ -90,16 +107,6 @@ class Normalized
         }
 
         return $this;
-    }
-
-    protected function probablyExternal($url)
-    {
-        // If link starts with a slash, it's almost certainly local
-        if (strpos($url, '/') === 0) {
-            return false;
-        }
-
-        return parse_url($url, PHP_URL_HOST) !== parse_url(home_url(), PHP_URL_HOST);
     }
 
     public function url()
@@ -134,10 +141,10 @@ class Normalized
         return null;
     }
 
-    public function possiblyExternal()
+    public function probablyExternal()
     {
         if ($this->valid()) {
-            return $this->possiblyExternal;
+            return $this->probablyExternal;
         }
 
         return null;
