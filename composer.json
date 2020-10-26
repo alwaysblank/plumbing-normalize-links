@@ -11,6 +11,12 @@
     "require": {
       "php": "~7.3"
     },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0"
+    },
+    "scripts": {
+        "test": "./vendor/bin/phpunit --testdox"
+    },
     "autoload": {
       "psr-4": {
           "Livy\\Plumbing\\NormalizeLinks\\": "src/"
