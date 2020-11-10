@@ -149,6 +149,11 @@ class Normalized
     public function newTab()
     {
         if ($this->valid()) {
+            if (false === $this->newTab) {
+                // If this has been explicitly set to false, someone really wants false
+                return false;
+            }
+
             return $this->newTab || ($this->probablyExternal() && true === $this->settings['external_in_new_tab']);
         }
 
