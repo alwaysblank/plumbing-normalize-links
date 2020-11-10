@@ -34,7 +34,13 @@ A small number of settings are also supported, which can be passed when instanti
 $Link = new Normalized(get_field('some_link'), [
     'label' => "Learn More", // Used as a fallback if there is no `title.`
     'external_in_new_tab' => true, // Always open external links in new tab
+    'validate' => [
+        'url' => false,
+        'label' => false,
+    ], // Validate url and/or label
 ]);
 ----
 
 `label` defaults to "Learn More" and `external_in_new_tab` defaults to `true`.
+`validate` validates to _not_ validating inputs.
+You can specify which items (`url` or `label`) to validated, or set `validate` to `true` to validate all items.

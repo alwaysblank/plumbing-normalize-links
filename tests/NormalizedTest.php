@@ -5,7 +5,7 @@ namespace Livy\Plumbing\NormalizeLinks;
 
 use PHPUnit\Framework\TestCase;
 
-require __DIR__.'/mock.php';
+require __DIR__ . '/mock.php';
 
 final class NormalizedTest extends TestCase
 {
@@ -22,7 +22,7 @@ final class NormalizedTest extends TestCase
 
         $this->normalizedInvalid = new Normalized([
             'url' => false,
-        ]);
+        ], ['validate' => true]);
     }
 
     public function testInstantiationWorksCorrectly(): void
@@ -72,7 +72,7 @@ final class NormalizedTest extends TestCase
 
     public function testHandleBadLinkArgument(): void
     {
-        $Normalized = new Normalized(44);
+        $Normalized = new Normalized(44, ['validate' => true]);
         $this->assertFalse($Normalized->valid());
     }
 
@@ -94,9 +94,28 @@ final class NormalizedTest extends TestCase
         $this->assertSame("Come Say Hi", $Normalized->label());
     }
 
-    public function testSetExternalNewTa(): void
+    public function testSetExternalNewTab(): void
     {
         $Normalized = new Normalized('https://www.google.org', ['external_in_new_tab' => false]);
         $this->assertFalse($Normalized->newTab());
+    }
+
+    public function testOverrideValidation(): void
+    {
+        $Normalized = new Normalized([
+            'url'   => 'javascript:window.print();',
+            'title' => 2,
+        ], ['validate' => ['url' => true, 'title' => true]]);
+        $Normalized2 = new Normalized([
+            'url'   => 'javascript:window.print();',
+            'title' => 2,
+        ]);
+        $Normalized3 = new Normalized([
+            'url'   => 'javascript:window.print();',
+            'title' => 2,
+        ], ['validate' => true]);
+        $this->assertFalse($Normalized->valid());
+        $this->assertTrue($Normalized2->valid());
+        $this->assertFalse($Normalized3->valid());
     }
 }

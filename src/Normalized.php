@@ -11,6 +11,10 @@ class Normalized
     protected $settings = [
         'label'               => "Learn More",
         'external_in_new_tab' => true,
+        'validate'            => [
+            'url'   => false,
+            'label' => false,
+        ]
     ];
 
     public function __construct($link, $settings = [])
@@ -32,6 +36,23 @@ class Normalized
         }
     }
 
+    protected function shouldValidate(string $part)
+    {
+        if ( ! is_array($this->settings['validate'])) {
+            if (true === $this->settings['validate']) {
+                // Allow blanket set true
+                return true;
+            }
+
+            return true;
+        }
+
+        // We can assume validate exists
+        return isset($this->settings['validate'][$part])
+            ? (bool)$this->settings['validate'][$part]
+            : false;
+    }
+
     public function validatePart(string $part, array $source)
     {
         if ( ! isset($source[$part])) {
@@ -42,9 +63,13 @@ class Normalized
 
         switch ($part) {
             case 'url':
-                return Validation::url($value);
+                return $this->shouldValidate('url')
+                    ? Validation::url($value)
+                    : true;
             case 'title':
-                return Validation::title($value);
+                return $this->shouldValidate('label')
+                    ? Validation::title($value)
+                    : true;
             case 'target':
                 return '_blank' === $value;
             default:
@@ -100,7 +125,16 @@ class Normalized
 
     public function valid(): bool
     {
-        return is_string($this->url) && is_string($this->label);
+        $url   = true;
+        $label = true;
+        if ($this->shouldValidate('url')) {
+            $url = Validation::url($this->url);
+        }
+        if ($this->shouldValidate($label)) {
+            $label = Validation::title($this->label);
+        }
+
+        return $url && $label;
     }
 
     public function label()
