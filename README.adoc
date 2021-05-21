@@ -42,5 +42,5 @@ $Link = new Normalized(get_field('some_link'), [
 ----
 
 `label` defaults to "Learn More" and `external_in_new_tab` defaults to `true`.
-`validate` validates to _not_ validating inputs.
+`validate` defaults to _not_ validating inputs.
 You can specify which items (`url` or `label`) to validated, or set `validate` to `true` to validate all items.
